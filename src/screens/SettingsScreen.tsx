@@ -100,9 +100,6 @@ export default function SettingsScreen() {
 
       <PaywallModal
         visible={showPaywall}
-        price="$2.99"
-        onPurchase={() => setShowPaywall(false)}
-        onRestore={() => setShowPaywall(false)}
         onClose={() => setShowPaywall(false)}
       />
     </ScrollView>
