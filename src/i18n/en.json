@@ -1,0 +1,72 @@
+{
+  "app": {
+    "name": "Moving Checklist"
+  },
+  "tabs": {
+    "timeline": "Timeline",
+    "categories": "Categories",
+    "settings": "Settings"
+  },
+  "timeline": {
+    "2monthsBefore": "2 Months Before",
+    "1monthBefore": "1 Month Before",
+    "2weeksBefore": "2 Weeks Before",
+    "1weekBefore": "1 Week Before",
+    "moveDay": "Moving Day",
+    "afterMove": "After Moving",
+    "daysLeft": "{{count}} days left",
+    "daysAgo": "{{count}} days ago",
+    "today": "Today is moving day!",
+    "progress": "{{done}}/{{total}} completed"
+  },
+  "categories": {
+    "procedures": "Procedures",
+    "packing": "Packing",
+    "cancellation": "Cancellations",
+    "new_home": "New Home",
+    "other": "Other"
+  },
+  "task": {
+    "addCustom": "Add Custom Task",
+    "note": "Note",
+    "notePlaceholder": "Phone numbers, booking refs, etc.",
+    "detail": "Details",
+    "markComplete": "Mark Complete",
+    "markIncomplete": "Mark Incomplete"
+  },
+  "settings": {
+    "title": "Settings",
+    "moveDate": "Moving Date",
+    "changeMoveDate": "Change Moving Date",
+    "notifications": "Notifications",
+    "notifyDaysBefore": "Remind days before",
+    "region": "Region",
+    "regionJp": "Japan",
+    "regionGlobal": "Global",
+    "pro": "Upgrade to Pro",
+    "proDescription": "Custom tasks, notifications, multi-move, PDF export",
+    "restore": "Restore Purchase",
+    "language": "Language"
+  },
+  "onboarding": {
+    "title": "When are you moving?",
+    "subtitle": "We'll create a personalized checklist based on your moving date",
+    "setDate": "Set Moving Date",
+    "start": "Get Started"
+  },
+  "paywall": {
+    "title": "Unlock Pro",
+    "feature1": "Add custom tasks",
+    "feature2": "Smart notifications",
+    "feature3": "Manage multiple moves",
+    "feature4": "Export to PDF",
+    "purchase": "Buy Pro — {{price}}",
+    "restore": "Restore Purchase"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "done": "Done"
+  }
+}

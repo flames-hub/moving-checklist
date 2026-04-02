@@ -1,0 +1,72 @@
+{
+  "app": {
+    "name": "引越しチェックリスト"
+  },
+  "tabs": {
+    "timeline": "タイムライン",
+    "categories": "カテゴリ",
+    "settings": "設定"
+  },
+  "timeline": {
+    "2monthsBefore": "2ヶ月前",
+    "1monthBefore": "1ヶ月前",
+    "2weeksBefore": "2週間前",
+    "1weekBefore": "1週間前",
+    "moveDay": "引越し当日",
+    "afterMove": "引越し後",
+    "daysLeft": "あと{{count}}日",
+    "daysAgo": "{{count}}日前",
+    "today": "今日が引越し日です！",
+    "progress": "{{done}}/{{total}} 完了"
+  },
+  "categories": {
+    "procedures": "手続き",
+    "packing": "荷造り",
+    "cancellation": "解約・停止",
+    "new_home": "新居準備",
+    "other": "その他"
+  },
+  "task": {
+    "addCustom": "カスタムタスクを追加",
+    "note": "メモ",
+    "notePlaceholder": "電話番号、予約番号など",
+    "detail": "詳細",
+    "markComplete": "完了にする",
+    "markIncomplete": "未完了に戻す"
+  },
+  "settings": {
+    "title": "設定",
+    "moveDate": "引越し日",
+    "changeMoveDate": "引越し日を変更",
+    "notifications": "通知",
+    "notifyDaysBefore": "何日前に通知",
+    "region": "地域",
+    "regionJp": "日本",
+    "regionGlobal": "海外",
+    "pro": "Proにアップグレード",
+    "proDescription": "カスタムタスク、通知、複数回管理、PDF出力",
+    "restore": "購入を復元",
+    "language": "言語"
+  },
+  "onboarding": {
+    "title": "引越し日はいつですか？",
+    "subtitle": "引越し日に合わせて、やることリストを自動で作成します",
+    "setDate": "引越し日を設定",
+    "start": "はじめる"
+  },
+  "paywall": {
+    "title": "Proを解除",
+    "feature1": "カスタムタスク追加",
+    "feature2": "スマート通知",
+    "feature3": "複数回の引越し管理",
+    "feature4": "PDF出力",
+    "purchase": "Proを購入 — {{price}}",
+    "restore": "購入を復元"
+  },
+  "common": {
+    "cancel": "キャンセル",
+    "save": "保存",
+    "delete": "削除",
+    "done": "完了"
+  }
+}
