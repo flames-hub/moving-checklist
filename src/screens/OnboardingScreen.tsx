@@ -13,14 +13,18 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import * as Localization from 'expo-localization';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useMoveStore } from '../store/moveStore';
 import { useTheme } from '../hooks/useTheme';
 import Card from '../components/GlassCard';
 import { formatDate } from '../utils/dateCalc';
 import { Spacing, FontSize, BorderRadius, Shadow } from '../constants/theme';
+import { RootStackParamList } from '../navigation/AppNavigator';
 
 export default function OnboardingScreen() {
   const { t, i18n } = useTranslation();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const createMove = useMoveStore((s) => s.createMove);
   const moves = useMoveStore((s) => s.moves);
   const colors = useTheme();
@@ -41,6 +45,11 @@ export default function OnboardingScreen() {
     const d = String(date.getDate()).padStart(2, '0');
     const moveName = name.trim() || `${t('onboarding.defaultName')} ${moves.length + 1}`;
     createMove(moveName, `${y}-${m}-${d}`, region);
+    if (moves.length === 0) {
+      navigation.replace('Main');
+    } else {
+      navigation.goBack();
+    }
   };
 
   const handleDateChange = (_: any, selected?: Date) => {
