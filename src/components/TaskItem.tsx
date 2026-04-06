@@ -1,15 +1,10 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { Task } from '../types';
-import { Colors, Spacing, FontSize, BorderRadius } from '../constants/theme';
-
-const categoryColors: Record<string, { light: string; dark: string }> = {
-  procedures: { light: Colors.light.categoryProcedures, dark: Colors.dark.categoryProcedures },
-  packing: { light: Colors.light.categoryPacking, dark: Colors.dark.categoryPacking },
-  cancellation: { light: Colors.light.categoryCancellation, dark: Colors.dark.categoryCancellation },
-  new_home: { light: Colors.light.categoryNewHome, dark: Colors.dark.categoryNewHome },
-  other: { light: Colors.light.categoryOther, dark: Colors.dark.categoryOther },
-};
+import { useTheme } from '../hooks/useTheme';
+import { Spacing, FontSize, BorderRadius } from '../constants/theme';
 
 interface Props {
   task: Task;
@@ -17,71 +12,125 @@ interface Props {
   onPress: () => void;
 }
 
+const CAT_COLORS: Record<string, string> = {
+  procedures:   'categoryProcedures',
+  packing:      'categoryPacking',
+  cancellation: 'categoryCancellation',
+  new_home:     'categoryNewHome',
+  other:        'categoryOther',
+};
+
 export default function TaskItem({ task, onToggle, onPress }: Props) {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
-  const catColor = categoryColors[task.category]?.[colorScheme === 'dark' ? 'dark' : 'light'] ?? colors.textSecondary;
+  const { t } = useTranslation();
+  const colors = useTheme();
+  const colorKey = CAT_COLORS[task.category] ?? 'categoryOther';
+  const catColor = (colors as unknown as Record<string, string>)[colorKey];
 
   return (
     <TouchableOpacity
-      style={[styles.container, { backgroundColor: colors.surface, borderColor: colors.border }]}
+      style={[
+        styles.row,
+        {
+          backgroundColor: colors.surfaceRaised,
+          borderColor:     colors.border,
+        },
+      ]}
       onPress={onPress}
-      activeOpacity={0.7}
+      activeOpacity={0.6}
     >
-      <TouchableOpacity
-        onPress={onToggle}
+      {/* Category accent bar */}
+      <View
         style={[
-          styles.checkbox,
-          {
-            borderColor: task.isCompleted ? colors.success : colors.border,
-            backgroundColor: task.isCompleted ? colors.success : 'transparent',
-          },
+          styles.accentBar,
+          { backgroundColor: task.isCompleted ? colors.border : catColor },
         ]}
-      >
-        {task.isCompleted && <Text style={styles.checkmark}>✓</Text>}
-      </TouchableOpacity>
-      <View style={styles.content}>
+      />
+
+      {/* Content */}
+      <View style={styles.body}>
         <Text
-          style={[styles.title, { color: colors.text }, task.isCompleted && styles.completed]}
+          style={[
+            styles.title,
+            { color: colors.text },
+            task.isCompleted && styles.completedTitle,
+          ]}
           numberOfLines={2}
         >
           {task.title}
         </Text>
-        <View style={[styles.categoryBadge, { backgroundColor: catColor + '20' }]}>
-          <Text style={[styles.categoryText, { color: catColor }]}>{task.category}</Text>
-        </View>
+        {task.description && !task.isCompleted ? (
+          <Text
+            style={[styles.desc, { color: colors.textSecondary }]}
+            numberOfLines={1}
+          >
+            {task.description}
+          </Text>
+        ) : null}
+        <Text style={[styles.catLabel, { color: task.isCompleted ? colors.textSecondary : catColor }]}>
+          {t(`categories.${task.category}`)}
+        </Text>
       </View>
+
+      {/* ── Right complete button ── */}
+      <TouchableOpacity
+        onPress={onToggle}
+        style={styles.completeBtn}
+        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        activeOpacity={0.7}
+      >
+        <Ionicons
+          name={task.isCompleted ? 'checkmark-circle' : 'ellipse-outline'}
+          size={32}
+          color={task.isCompleted ? colors.success : colors.border}
+        />
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  row: {
     flexDirection: 'row',
-    alignItems: 'center',
-    padding: Spacing.md,
-    borderRadius: BorderRadius.md,
-    borderWidth: 1,
-    marginBottom: Spacing.sm,
+    alignItems:    'center',
+    paddingVertical: Spacing.sm + 4,
+    paddingRight:  Spacing.sm,
+    borderRadius:  BorderRadius.md,
+    borderWidth:   StyleSheet.hairlineWidth,
+    marginBottom:  Spacing.sm,
+    gap:           Spacing.sm + 2,
   },
-  checkbox: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    borderWidth: 2,
+  accentBar: {
+    width:        3,
+    height:       38,
+    borderRadius: 2,
+    flexShrink:   0,
+  },
+  body: { flex: 1 },
+  title: {
+    fontSize:   FontSize.md,
+    fontWeight: '600',
+    lineHeight: 22,
+  },
+  completedTitle: {
+    textDecorationLine: 'line-through',
+    opacity:            0.38,
+  },
+  desc: {
+    fontSize:   FontSize.sm,
+    lineHeight: 18,
+    marginTop:  2,
+  },
+  catLabel: {
+    fontSize:      FontSize.xs,
+    fontWeight:    '600',
+    letterSpacing: 0.3,
+    marginTop:     3,
+  },
+  completeBtn: {
+    width:          44,
+    height:         44,
     justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: Spacing.md,
+    alignItems:     'center',
+    flexShrink:     0,
   },
-  checkmark: { color: '#fff', fontSize: 14, fontWeight: '700' },
-  content: { flex: 1 },
-  title: { fontSize: FontSize.md, fontWeight: '500', marginBottom: Spacing.xs },
-  completed: { textDecorationLine: 'line-through', opacity: 0.5 },
-  categoryBadge: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: 2,
-    borderRadius: BorderRadius.sm,
-  },
-  categoryText: { fontSize: FontSize.sm, fontWeight: '600' },
 });

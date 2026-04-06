@@ -1,40 +1,69 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { v4 as uuidv4 } from 'uuid';
 import { Move, Task, TaskCategory } from '../types';
 import { getPresets } from '../data/presets';
 
+function generateId(): string {
+  const t = Date.now().toString(36);
+  const r = Math.random().toString(36).substring(2, 10);
+  return `${t}-${r}`;
+}
+
 interface MoveState {
+  // Multi-move
+  moves: Move[];
+  allTasks: Task[];
+  activeMoveId: string | null;
+
+  // Derived (computed from active)
   move: Move | null;
   tasks: Task[];
-  createMove: (moveDate: string, region: 'jp' | 'global') => void;
+
+  // Actions
+  createMove: (name: string, moveDate: string, region: 'jp' | 'global') => void;
+  switchMove: (moveId: string) => void;
+  deleteMove: (moveId: string) => void;
+  renameMove: (moveId: string, name: string) => void;
   updateMoveDate: (moveDate: string) => void;
+  updateMoveNote: (note: string) => void;
   toggleTask: (taskId: string) => void;
   addCustomTask: (title: string, category: TaskCategory, timingDays: number, description?: string) => void;
   updateTaskNote: (taskId: string, note: string) => void;
+  addTaskPhoto: (taskId: string, uri: string) => void;
+  removeTaskPhoto: (taskId: string, uri: string) => void;
   deleteTask: (taskId: string) => void;
   getCompletionStats: () => { done: number; total: number; percent: number };
   getCategoryStats: (category: TaskCategory) => { done: number; total: number; percent: number };
 }
 
+function deriveActive(moves: Move[], allTasks: Task[], activeMoveId: string | null) {
+  const move = moves.find((m) => m.id === activeMoveId) ?? null;
+  const tasks = move ? allTasks.filter((t) => t.moveId === move.id) : [];
+  return { move, tasks };
+}
+
 export const useMoveStore = create<MoveState>()(
   persist(
     (set, get) => ({
+      moves: [],
+      allTasks: [],
+      activeMoveId: null,
       move: null,
       tasks: [],
 
-      createMove: (moveDate, region) => {
-        const moveId = uuidv4();
-        const move: Move = {
+      createMove: (name, moveDate, region) => {
+        const moveId = generateId();
+        const newMove: Move = {
           id: moveId,
+          name,
           moveDate,
           region,
           createdAt: new Date().toISOString(),
         };
         const presets = getPresets(region);
-        const tasks: Task[] = presets.map((p) => ({
-          id: uuidv4(),
+        const newTasks: Task[] = presets.map((p) => ({
+          id: generateId(),
           moveId,
           title: p.title,
           description: p.description,
@@ -43,35 +72,77 @@ export const useMoveStore = create<MoveState>()(
           isCompleted: false,
           isCustom: false,
         }));
-        set({ move, tasks });
+        const moves = [...get().moves, newMove];
+        const allTasks = [...get().allTasks, ...newTasks];
+        const { move, tasks } = deriveActive(moves, allTasks, moveId);
+        set({ moves, allTasks, activeMoveId: moveId, move, tasks });
+      },
+
+      switchMove: (moveId) => {
+        const { moves, allTasks } = get();
+        const { move, tasks } = deriveActive(moves, allTasks, moveId);
+        set({ activeMoveId: moveId, move, tasks });
+      },
+
+      deleteMove: (moveId) => {
+        const moves = get().moves.filter((m) => m.id !== moveId);
+        const allTasks = get().allTasks.filter((t) => t.moveId !== moveId);
+        const newActiveId = get().activeMoveId === moveId
+          ? (moves[moves.length - 1]?.id ?? null)
+          : get().activeMoveId;
+        const { move, tasks } = deriveActive(moves, allTasks, newActiveId);
+        set({ moves, allTasks, activeMoveId: newActiveId, move, tasks });
+      },
+
+      renameMove: (moveId, name) => {
+        const moves = get().moves.map((m) => (m.id === moveId ? { ...m, name } : m));
+        const { allTasks, activeMoveId } = get();
+        const { move, tasks } = deriveActive(moves, allTasks, activeMoveId);
+        set({ moves, move, tasks });
       },
 
       updateMoveDate: (moveDate) => {
-        const { move } = get();
-        if (!move) return;
-        set({ move: { ...move, moveDate } });
+        const { activeMoveId } = get();
+        if (!activeMoveId) return;
+        const moves = get().moves.map((m) =>
+          m.id === activeMoveId ? { ...m, moveDate } : m
+        );
+        const { allTasks } = get();
+        const { move, tasks } = deriveActive(moves, allTasks, activeMoveId);
+        set({ moves, move, tasks });
+      },
+
+      updateMoveNote: (note) => {
+        const { activeMoveId, allTasks } = get();
+        if (!activeMoveId) return;
+        const moves = get().moves.map((m) =>
+          m.id === activeMoveId ? { ...m, note } : m
+        );
+        const { move, tasks } = deriveActive(moves, allTasks, activeMoveId);
+        set({ moves, move, tasks });
       },
 
       toggleTask: (taskId) => {
-        set((state) => ({
-          tasks: state.tasks.map((t) =>
-            t.id === taskId
-              ? {
-                  ...t,
-                  isCompleted: !t.isCompleted,
-                  completedAt: !t.isCompleted ? new Date().toISOString() : undefined,
-                }
-              : t
-          ),
-        }));
+        const allTasks = get().allTasks.map((t) =>
+          t.id === taskId
+            ? {
+                ...t,
+                isCompleted: !t.isCompleted,
+                completedAt: !t.isCompleted ? new Date().toISOString() : undefined,
+              }
+            : t
+        );
+        const { moves, activeMoveId } = get();
+        const { move, tasks } = deriveActive(moves, allTasks, activeMoveId);
+        set({ allTasks, move, tasks });
       },
 
       addCustomTask: (title, category, timingDays, description) => {
-        const { move } = get();
-        if (!move) return;
+        const { activeMoveId } = get();
+        if (!activeMoveId) return;
         const task: Task = {
-          id: uuidv4(),
-          moveId: move.id,
+          id: generateId(),
+          moveId: activeMoveId,
           title,
           description,
           category,
@@ -79,19 +150,42 @@ export const useMoveStore = create<MoveState>()(
           isCompleted: false,
           isCustom: true,
         };
-        set((state) => ({ tasks: [...state.tasks, task] }));
+        const allTasks = [...get().allTasks, task];
+        const { moves } = get();
+        const { move, tasks } = deriveActive(moves, allTasks, activeMoveId);
+        set({ allTasks, move, tasks });
       },
 
       updateTaskNote: (taskId, note) => {
-        set((state) => ({
-          tasks: state.tasks.map((t) => (t.id === taskId ? { ...t, note } : t)),
-        }));
+        const allTasks = get().allTasks.map((t) => (t.id === taskId ? { ...t, note } : t));
+        const { moves, activeMoveId } = get();
+        const { move, tasks } = deriveActive(moves, allTasks, activeMoveId);
+        set({ allTasks, move, tasks });
+      },
+
+      addTaskPhoto: (taskId, uri) => {
+        const allTasks = get().allTasks.map((t) =>
+          t.id === taskId ? { ...t, photos: [...(t.photos ?? []), uri] } : t
+        );
+        const { moves, activeMoveId } = get();
+        const { move, tasks } = deriveActive(moves, allTasks, activeMoveId);
+        set({ allTasks, move, tasks });
+      },
+
+      removeTaskPhoto: (taskId, uri) => {
+        const allTasks = get().allTasks.map((t) =>
+          t.id === taskId ? { ...t, photos: (t.photos ?? []).filter((p) => p !== uri) } : t
+        );
+        const { moves, activeMoveId } = get();
+        const { move, tasks } = deriveActive(moves, allTasks, activeMoveId);
+        set({ allTasks, move, tasks });
       },
 
       deleteTask: (taskId) => {
-        set((state) => ({
-          tasks: state.tasks.filter((t) => t.id !== taskId),
-        }));
+        const allTasks = get().allTasks.filter((t) => t.id !== taskId);
+        const { moves, activeMoveId } = get();
+        const { move, tasks } = deriveActive(moves, allTasks, activeMoveId);
+        set({ allTasks, move, tasks });
       },
 
       getCompletionStats: () => {
@@ -112,6 +206,19 @@ export const useMoveStore = create<MoveState>()(
     {
       name: 'move-storage',
       storage: createJSONStorage(() => AsyncStorage),
+      partialize: (state) => ({
+        moves: state.moves,
+        allTasks: state.allTasks,
+        activeMoveId: state.activeMoveId,
+      }) as unknown as MoveState,
+      onRehydrateStorage: () => (state: MoveState | undefined) => {
+        if (state) {
+          const { moves, allTasks, activeMoveId } = state;
+          const { move, tasks } = deriveActive(moves, allTasks, activeMoveId);
+          state.move = move;
+          state.tasks = tasks;
+        }
+      },
     }
   )
 );

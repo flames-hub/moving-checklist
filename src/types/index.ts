@@ -1,10 +1,12 @@
 export interface Move {
   id: string;
+  name: string;
   moveDate: string; // ISO date 'YYYY-MM-DD'
   fromAddress?: string;
   toAddress?: string;
   region: 'jp' | 'global';
   createdAt: string;
+  note?: string;
 }
 
 export interface Task {
@@ -17,6 +19,7 @@ export interface Task {
   isCompleted: boolean;
   isCustom: boolean;
   note?: string;
+  photos?: string[]; // local URIs
   completedAt?: string;
 }
 

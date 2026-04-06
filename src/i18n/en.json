@@ -1,6 +1,7 @@
 {
   "app": {
-    "name": "Moving Checklist"
+    "name": "引越し日和",
+    "subtitle": "Moving Day Planner"
   },
   "tabs": {
     "timeline": "Timeline",
@@ -15,53 +16,102 @@
     "moveDay": "Moving Day",
     "afterMove": "After Moving",
     "daysLeft": "{{count}} days left",
-    "daysAgo": "{{count}} days ago",
+    "daysLeftBanner": "{{count}} days until moving day",
+    "daysLeftLabel": "days until your move",
+    "daysUnit": "days",
+    "daysAgo": "{{count}} days since your move",
     "today": "Today is moving day!",
-    "progress": "{{done}}/{{total}} completed"
+    "progress": "{{done}}/{{total}} completed",
+    "sectionDesc2months": "Plenty of time. Start with comparing movers and decluttering to make later stages easier.",
+    "sectionDesc1month": "Handle utility transfers and address changes across your accounts.",
+    "sectionDesc2weeks": "Time to start packing! Begin with items you won't need until after the move.",
+    "sectionDesc1week": "Empty the fridge, gather valuables, and prepare your moving day essentials.",
+    "sectionDescDay": "Moving day! Do your final walkthrough and make sure nothing gets left behind.",
+    "sectionDescAfter": "Update your license, voter registration, and settle into your new home.",
+    "emptySection": "No tasks in this section",
+    "memoPlaceholder": "Notes (mover's phone, key pickup location, etc.)",
+    "filterAll": "Show all",
+    "filterActive": "Remaining only"
   },
   "categories": {
     "procedures": "Procedures",
     "packing": "Packing",
     "cancellation": "Cancellations",
     "new_home": "New Home",
-    "other": "Other"
+    "other": "Other",
+    "descProcedures": "Government forms, address updates & paperwork",
+    "descPacking": "Sorting, packing & decluttering",
+    "descCancellation": "Utility transfers & service cancellations",
+    "descNewHome": "New home inspection, setup & contracts",
+    "descOther": "Greetings, notifications & miscellaneous"
   },
   "task": {
     "addCustom": "Add Custom Task",
     "note": "Note",
-    "notePlaceholder": "Phone numbers, booking refs, etc.",
+    "notePlaceholder": "Phone numbers, booking refs, URLs — anything you need to remember",
     "detail": "Details",
     "markComplete": "Mark Complete",
-    "markIncomplete": "Mark Incomplete"
+    "markIncomplete": "Mark Incomplete",
+    "photos": "Photos",
+    "takePhoto": "Camera",
+    "pickPhoto": "Gallery",
+    "removePhotoTitle": "Remove Photo",
+    "removePhotoMsg": "Are you sure you want to remove this photo?"
   },
   "settings": {
     "title": "Settings",
     "moveDate": "Moving Date",
     "changeMoveDate": "Change Moving Date",
+    "moveDateDesc": "Update if your plans change. Task timelines will adjust automatically.",
     "notifications": "Notifications",
+    "notificationsDesc": "Get reminded when task deadlines are approaching.",
     "notifyDaysBefore": "Remind days before",
     "region": "Region",
     "regionJp": "Japan",
     "regionGlobal": "Global",
+    "theme": "Theme Color",
+    "themeRose": "Terra",
+    "themeLemon": "Sage",
+    "themeSky": "Indigo",
+    "themeDark": "Dark",
     "pro": "Upgrade to Pro",
-    "proDescription": "Custom tasks, notifications, multi-move, PDF export",
+    "proDescription": "Custom tasks, reminder notifications, multi-move management, PDF export",
     "restore": "Restore Purchase",
-    "language": "Language"
+    "language": "Language",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "version": "Version",
+    "about": "About This App",
+    "aboutDesc": "Set your moving date and get an auto-generated checklist covering everything from utilities to paperwork — for both domestic and international moves."
   },
   "onboarding": {
-    "title": "When are you moving?",
-    "subtitle": "We'll create a personalized checklist based on your moving date",
+    "title": "Set Your Moving Date",
+    "subtitle": "Just pick a date and we'll build a personalized checklist around it. You can always change it later.",
     "setDate": "Set Moving Date",
-    "start": "Get Started"
+    "start": "Get Started",
+    "moveName": "Move Name",
+    "moveNamePlaceholder": "e.g. NYC → LA",
+    "defaultName": "Move"
   },
   "paywall": {
-    "title": "Unlock Pro",
-    "feature1": "Add custom tasks",
-    "feature2": "Smart notifications",
-    "feature3": "Manage multiple moves",
-    "feature4": "Export to PDF",
+    "title": "Upgrade to Pro",
+    "feature1": "Add your own custom tasks",
+    "feature2": "Get deadline reminder notifications",
+    "feature3": "Manage multiple moves at once",
+    "feature4": "Export your checklist to PDF",
     "purchase": "Buy Pro — {{price}}",
-    "restore": "Restore Purchase"
+    "restore": "Restore Previous Purchase"
+  },
+  "moves": {
+    "title": "Your Moves",
+    "deleteTitle": "Delete Move",
+    "deleteMsg": "Delete \"{{name}}\"? All tasks will also be removed.",
+    "completed": "done",
+    "active": "Active",
+    "proRequired": "Unlock with Pro",
+    "addNew": "Add New Move",
+    "manage": "Manage Moves"
   },
   "common": {
     "cancel": "Cancel",

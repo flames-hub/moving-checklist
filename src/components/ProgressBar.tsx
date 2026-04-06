@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, useColorScheme } from 'react-native';
-import { Colors, Spacing, FontSize } from '../constants/theme';
+import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '../hooks/useTheme';
+import { Spacing, FontSize, BorderRadius } from '../constants/theme';
 
 interface Props {
   done: number;
@@ -9,28 +10,39 @@ interface Props {
 }
 
 export default function ProgressBar({ done, total, label }: Props) {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  const colors = useTheme();
   const percent = total === 0 ? 0 : (done / total) * 100;
 
   return (
     <View style={styles.container}>
       <View style={styles.labelRow}>
-        <Text style={[styles.label, { color: colors.text }]}>{label}</Text>
-        <Text style={[styles.count, { color: colors.textSecondary }]}>{Math.round(percent)}%</Text>
+        <Text style={[styles.label, { color: colors.textSecondary }]}>{label}</Text>
+        <Text style={[styles.percent, { color: colors.primary }]}>
+          {Math.round(percent)}%
+        </Text>
       </View>
       <View style={[styles.track, { backgroundColor: colors.border }]}>
-        <View style={[styles.fill, { width: `${percent}%` as any, backgroundColor: colors.primary }]} />
+        {percent > 0 && (
+          <View
+            style={[
+              styles.fill,
+              {
+                width: `${Math.max(percent, 1.5)}%` as any,
+                backgroundColor: colors.primary,
+              },
+            ]}
+          />
+        )}
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { marginBottom: Spacing.md },
-  labelRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: Spacing.xs },
-  label: { fontSize: FontSize.md, fontWeight: '500' },
-  count: { fontSize: FontSize.sm },
-  track: { height: 8, borderRadius: 4, overflow: 'hidden' },
-  fill: { height: '100%', borderRadius: 4 },
+  container:  { marginBottom: Spacing.md },
+  labelRow:   { flexDirection: 'row', justifyContent: 'space-between', marginBottom: Spacing.xs },
+  label:      { fontSize: FontSize.sm, fontWeight: '500' },
+  percent:    { fontSize: FontSize.sm, fontWeight: '700' },
+  track:      { height: 3, borderRadius: BorderRadius.full, overflow: 'hidden' },
+  fill:       { height: '100%', borderRadius: BorderRadius.full },
 });

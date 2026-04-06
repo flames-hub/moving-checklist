@@ -1,82 +1,259 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform, useColorScheme } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Platform,
+} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import * as Localization from 'expo-localization';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMoveStore } from '../store/moveStore';
-import { Colors, Spacing, FontSize, BorderRadius } from '../constants/theme';
+import { useTheme } from '../hooks/useTheme';
+import Card from '../components/GlassCard';
 import { formatDate } from '../utils/dateCalc';
+import { Spacing, FontSize, BorderRadius, Shadow } from '../constants/theme';
 
 export default function OnboardingScreen() {
   const { t, i18n } = useTranslation();
   const createMove = useMoveStore((s) => s.createMove);
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  const moves = useMoveStore((s) => s.moves);
+  const colors = useTheme();
+  const insets = useSafeAreaInsets();
 
   const defaultDate = new Date();
   defaultDate.setMonth(defaultDate.getMonth() + 1);
-
   const [date, setDate] = useState(defaultDate);
+  const [name, setName] = useState('');
   const [showPicker, setShowPicker] = useState(false);
 
+  const lang = i18n.language;
   const region = Localization.getLocales()[0]?.languageCode === 'ja' ? 'jp' : 'global';
 
   const handleStart = () => {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, '0');
     const d = String(date.getDate()).padStart(2, '0');
-    createMove(`${y}-${m}-${d}`, region);
+    const moveName = name.trim() || `${t('onboarding.defaultName')} ${moves.length + 1}`;
+    createMove(moveName, `${y}-${m}-${d}`, region);
+  };
+
+  const handleDateChange = (_: any, selected?: Date) => {
+    if (Platform.OS === 'android') setShowPicker(false);
+    if (selected) setDate(selected);
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.text }]}>{t('onboarding.title')}</Text>
-      <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{t('onboarding.subtitle')}</Text>
-      <TouchableOpacity
-        style={[styles.dateButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
-        onPress={() => setShowPicker(true)}
-      >
-        <Text style={[styles.dateText, { color: colors.text }]}>
-          {formatDate(date.toISOString(), i18n.language)}
+    <ScrollView
+      style={{ backgroundColor: colors.background }}
+      contentContainerStyle={[styles.container, { paddingTop: insets.top + 40 }]}
+      keyboardShouldPersistTaps="handled"
+    >
+      <View style={styles.header}>
+        <View style={[styles.iconCircle, { backgroundColor: colors.primarySoft }]}>
+          <Ionicons name="cube-outline" size={40} color={colors.primary} />
+        </View>
+        <Text style={[styles.title, { color: colors.text }]}>{t('onboarding.title')}</Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+          {t('onboarding.subtitle')}
         </Text>
-      </TouchableOpacity>
+      </View>
+
+      {/* Move name input */}
+      <Card style={styles.nameCard}>
+        <View style={styles.nameInner}>
+          <Text style={[styles.nameLabel, { color: colors.textSecondary }]}>
+            {t('onboarding.moveName')}
+          </Text>
+          <TextInput
+            style={[styles.nameInput, { color: colors.text, borderColor: colors.border }]}
+            value={name}
+            onChangeText={setName}
+            placeholder={t('onboarding.moveNamePlaceholder')}
+            placeholderTextColor={colors.textSecondary}
+          />
+        </View>
+      </Card>
+
+      {/* Date display + picker trigger */}
+      <Card style={styles.dateCard} raised>
+        <TouchableOpacity
+          style={styles.dateInner}
+          onPress={() => setShowPicker(true)}
+          activeOpacity={0.7}
+        >
+          <View style={[styles.dateIconCircle, { backgroundColor: colors.primarySoft }]}>
+            <Ionicons name="calendar" size={28} color={colors.primary} />
+          </View>
+          <Text style={[styles.dateLabel, { color: colors.textSecondary }]}>
+            {t('onboarding.setDate')}
+          </Text>
+          <Text style={[styles.dateValue, { color: colors.text }]}>
+            {formatDate(`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`, lang)}
+          </Text>
+          <View style={[styles.changeDateBtn, { borderColor: colors.primary }]}>
+            <Ionicons name="create-outline" size={16} color={colors.primary} />
+            <Text style={[styles.changeDateText, { color: colors.primary }]}>
+              {t('settings.changeMoveDate')}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </Card>
+
       {showPicker && (
         <DateTimePicker
           value={date}
           mode="date"
+          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
           minimumDate={new Date()}
-          onChange={(_, selected) => {
-            setShowPicker(Platform.OS === 'ios');
-            if (selected) setDate(selected);
-          }}
+          locale={lang.startsWith('ja') ? 'ja-JP' : 'en-US'}
+          onChange={handleDateChange}
         />
       )}
+
+      {Platform.OS === 'ios' && showPicker && (
+        <TouchableOpacity
+          style={[styles.pickerDoneBtn, { backgroundColor: colors.primary }]}
+          onPress={() => setShowPicker(false)}
+          activeOpacity={0.85}
+        >
+          <Text style={styles.pickerDoneText}>{t('common.done')}</Text>
+        </TouchableOpacity>
+      )}
+
+      {/* Start button */}
       <TouchableOpacity
-        style={[styles.startButton, { backgroundColor: colors.primary }]}
+        style={[
+          styles.startButton,
+          { backgroundColor: colors.primary, shadowColor: colors.shadow },
+          Shadow.raised,
+        ]}
         onPress={handleStart}
+        activeOpacity={0.85}
       >
         <Text style={styles.startText}>{t('onboarding.start')}</Text>
       </TouchableOpacity>
-    </View>
+
+      <View style={{ height: insets.bottom + 24 }} />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: Spacing.xl },
-  title: { fontSize: FontSize.xxl, fontWeight: '800', textAlign: 'center', marginBottom: Spacing.md },
-  subtitle: { fontSize: FontSize.md, textAlign: 'center', marginBottom: Spacing.xl },
-  dateButton: {
-    paddingVertical: Spacing.md,
+  container: {
+    flexGrow: 1,
+    alignItems: 'center',
     paddingHorizontal: Spacing.xl,
-    borderRadius: BorderRadius.md,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: Spacing.lg,
+  },
+  iconCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: Spacing.md,
+  },
+  title: {
+    fontSize: FontSize.xxl,
+    fontWeight: '800',
+    textAlign: 'center',
+    marginBottom: Spacing.sm,
+  },
+  subtitle: {
+    fontSize: FontSize.md,
+    textAlign: 'center',
+    lineHeight: 22,
+    paddingHorizontal: Spacing.md,
+  },
+  nameCard: {
+    width: '100%',
+    marginBottom: Spacing.md,
+  },
+  nameInner: {
+    padding: Spacing.md,
+  },
+  nameLabel: {
+    fontSize: FontSize.sm,
+    fontWeight: '600',
+    marginBottom: Spacing.xs,
+  },
+  nameInput: {
+    fontSize: FontSize.lg,
+    fontWeight: '600',
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
     borderWidth: 1,
-    marginBottom: Spacing.xl,
-  },
-  dateText: { fontSize: FontSize.xl, fontWeight: '600' },
-  startButton: {
-    paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.xl * 2,
     borderRadius: BorderRadius.md,
   },
-  startText: { color: '#fff', fontSize: FontSize.lg, fontWeight: '700' },
+  dateCard: {
+    width: '100%',
+    marginBottom: Spacing.lg,
+  },
+  dateInner: {
+    alignItems: 'center',
+    padding: Spacing.lg,
+  },
+  dateIconCircle: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: Spacing.sm,
+  },
+  dateLabel: {
+    fontSize: FontSize.sm,
+    fontWeight: '500',
+    marginBottom: Spacing.xs,
+  },
+  dateValue: {
+    fontSize: FontSize.xxl,
+    fontWeight: '800',
+    marginBottom: Spacing.md,
+  },
+  changeDateBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.md,
+    borderRadius: BorderRadius.full,
+    borderWidth: 1.5,
+  },
+  changeDateText: {
+    fontSize: FontSize.sm,
+    fontWeight: '600',
+  },
+  pickerDoneBtn: {
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.xl,
+    borderRadius: BorderRadius.full,
+    alignSelf: 'center',
+    marginBottom: Spacing.md,
+  },
+  pickerDoneText: {
+    color: '#fff',
+    fontSize: FontSize.md,
+    fontWeight: '700',
+  },
+  startButton: {
+    width: '100%',
+    paddingVertical: Spacing.md + 2,
+    borderRadius: BorderRadius.md,
+    alignItems: 'center',
+  },
+  startText: {
+    color: '#fff',
+    fontSize: FontSize.lg,
+    fontWeight: '700',
+  },
 });

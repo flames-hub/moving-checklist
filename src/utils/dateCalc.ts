@@ -17,13 +17,18 @@ export function getCurrentSectionKey(moveDate: string): string {
   return 'after';
 }
 
+const EN_MONTHS = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+];
+
 export function formatDate(dateStr: string, locale: string): string {
   const date = new Date(dateStr);
   const y = date.getFullYear();
-  const m = date.getMonth() + 1;
+  const m = date.getMonth();
   const d = date.getDate();
   if (locale.startsWith('ja')) {
-    return `${y}年${m}月${d}日`;
+    return `${y}年${m + 1}月${d}日`;
   }
-  return `${m}/${d}/${y}`;
+  return `${EN_MONTHS[m]} ${d}, ${y}`;
 }

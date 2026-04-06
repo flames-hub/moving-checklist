@@ -1,28 +1,31 @@
 {
   "expo": {
-    "name": "Moving Checklist",
+    "name": "引越し日和",
     "slug": "moving-checklist",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "userInterfaceStyle": "light",
+    "newArchEnabled": false,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFFAF9"
     },
     "ios": {
       "bundleIdentifier": "com.tama.movingchecklist",
       "buildNumber": "1",
-      "supportsTablet": false
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSCalendarsUsageDescription": "Moving Checklist uses your calendar to schedule task reminders."
+      }
     },
     "android": {
       "package": "com.tama.movingchecklist",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#FFFAF9"
       }
     },
     "web": {
@@ -31,7 +34,14 @@
     "plugins": [
       "expo-notifications",
       "expo-localization",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Moving Checklist to access your photos to attach them to tasks.",
+          "cameraPermission": "Allow Moving Checklist to use the camera to take photos for tasks."
+        }
+      ]
     ]
   }
 }

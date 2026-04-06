@@ -1,35 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, StyleSheet, useColorScheme, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  Modal,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
-import Purchases, { PurchasesPackage } from 'react-native-purchases';
+import Purchases from '../utils/purchases';
 import { useSettingsStore } from '../store/settingsStore';
-import { Colors, Spacing, FontSize, BorderRadius } from '../constants/theme';
+import { useTheme } from '../hooks/useTheme';
+import { Spacing, FontSize, BorderRadius, Shadow } from '../constants/theme';
 
 interface Props {
   visible: boolean;
   onClose: () => void;
 }
 
+const FEATURE_ICONS = ['🎨', '🔔', '📋', '📄'];
+
 export default function PaywallModal({ visible, onClose }: Props) {
-  const { t } = useTranslation();
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  const { t, i18n } = useTranslation();
+  const colors = useTheme();
   const setIsPro = useSettingsStore((s) => s.setIsPro);
 
-  const [pkg, setPkg] = useState<PurchasesPackage | null>(null);
+  const [pkg, setPkg] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!visible) return;
     Purchases.getOfferings()
-      .then((offerings) => {
+      .then((offerings: any) => {
         const lifetime = offerings.current?.lifetime;
         if (lifetime) setPkg(lifetime);
       })
       .catch(() => {});
   }, [visible]);
 
-  const price = pkg?.product.priceString ?? '$2.99';
+  const fallbackPrice = i18n.language.startsWith('ja') ? '¥400' : '$2.99';
+  const price = pkg?.product.priceString ?? fallbackPrice;
 
   const handlePurchase = async () => {
     if (!pkg) return;
@@ -72,30 +82,49 @@ export default function PaywallModal({ visible, onClose }: Props) {
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.overlay}>
-        <View style={[styles.sheet, { backgroundColor: colors.surface }]}>
+        <View
+          style={[
+            styles.sheet,
+            { backgroundColor: colors.surface, shadowColor: colors.shadow },
+            Shadow.raised,
+          ]}
+        >
+          <View style={[styles.handle, { backgroundColor: colors.border }]} />
           <Text style={[styles.title, { color: colors.text }]}>{t('paywall.title')}</Text>
+
           {features.map((f, i) => (
-            <Text key={i} style={[styles.feature, { color: colors.text }]}>
-              • {f}
-            </Text>
+            <View
+              key={i}
+              style={[styles.featureRow, { backgroundColor: colors.primarySoft }]}
+            >
+              <Text style={styles.featureIcon}>{FEATURE_ICONS[i]}</Text>
+              <Text style={[styles.featureText, { color: colors.text }]}>{f}</Text>
+            </View>
           ))}
+
           {loading ? (
             <ActivityIndicator style={{ marginTop: Spacing.lg }} color={colors.primary} />
           ) : (
             <TouchableOpacity
-              style={[styles.buyButton, { backgroundColor: colors.primary }]}
+              style={[
+                styles.buyButton,
+                { backgroundColor: colors.primary, shadowColor: colors.shadow },
+                Shadow.card,
+              ]}
               onPress={handlePurchase}
+              activeOpacity={0.85}
             >
               <Text style={styles.buyText}>{t('paywall.purchase', { price })}</Text>
             </TouchableOpacity>
           )}
+
           <TouchableOpacity onPress={handleRestore} disabled={loading}>
-            <Text style={[styles.restoreText, { color: colors.textSecondary }]}>
+            <Text style={[styles.link, { color: colors.textSecondary }]}>
               {t('paywall.restore')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={onClose} disabled={loading}>
-            <Text style={[styles.closeText, { color: colors.textSecondary }]}>
+            <Text style={[styles.link, { color: colors.textSecondary }]}>
               {t('common.cancel')}
             </Text>
           </TouchableOpacity>
@@ -106,12 +135,30 @@ export default function PaywallModal({ visible, onClose }: Props) {
 }
 
 const styles = StyleSheet.create({
-  overlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.5)' },
-  sheet: { borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: Spacing.xl },
-  title: { fontSize: FontSize.xxl, fontWeight: '800', marginBottom: Spacing.lg, textAlign: 'center' },
-  feature: { fontSize: FontSize.lg, marginBottom: Spacing.sm, paddingLeft: Spacing.sm },
-  buyButton: { marginTop: Spacing.lg, padding: Spacing.md, borderRadius: BorderRadius.md, alignItems: 'center' },
+  overlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.3)' },
+  sheet: {
+    borderTopLeftRadius: BorderRadius.xl,
+    borderTopRightRadius: BorderRadius.xl,
+    padding: Spacing.xl,
+    paddingTop: Spacing.md,
+  },
+  handle: { width: 36, height: 4, borderRadius: 2, alignSelf: 'center', marginBottom: Spacing.lg },
+  title: { fontSize: FontSize.xxl, fontWeight: '800', textAlign: 'center', marginBottom: Spacing.lg },
+  featureRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: Spacing.md,
+    borderRadius: BorderRadius.md,
+    marginBottom: Spacing.sm,
+  },
+  featureIcon: { fontSize: 22, marginRight: Spacing.md },
+  featureText: { fontSize: FontSize.lg, fontWeight: '500', flex: 1 },
+  buyButton: {
+    marginTop: Spacing.md,
+    padding: Spacing.md + 2,
+    borderRadius: BorderRadius.md,
+    alignItems: 'center',
+  },
   buyText: { color: '#fff', fontSize: FontSize.lg, fontWeight: '700' },
-  restoreText: { textAlign: 'center', marginTop: Spacing.md, fontSize: FontSize.md },
-  closeText: { textAlign: 'center', marginTop: Spacing.sm, fontSize: FontSize.md },
+  link: { textAlign: 'center', marginTop: Spacing.md, fontSize: FontSize.md },
 });
