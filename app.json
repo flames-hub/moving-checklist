@@ -14,7 +14,7 @@
     },
     "ios": {
       "bundleIdentifier": "com.tama.movingchecklist",
-      "buildNumber": "1",
+      "buildNumber": "2",
       "supportsTablet": false,
       "infoPlist": {
         "NSCalendarsUsageDescription": "Moving Checklist uses your calendar to schedule task reminders.",
