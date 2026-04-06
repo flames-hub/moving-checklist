@@ -5,111 +5,267 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>利用規約 — 引越し日和</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-    line-height: 1.75;
-    color: #1c1917;
-    background: #fafaf9;
-    padding: 40px 24px 80px;
-    max-width: 640px;
-    margin: 0 auto;
+  :root {
+    --bg: #F5F0EA;
+    --surface: #FDFAF6;
+    --primary: #B8522E;
+    --text: #1C1410;
+    --text-sub: #6B5E56;
+    --border: #DDD5CC;
+    --accent-soft: #F2EBE2;
   }
-  header { border-bottom: 2px solid #1c1917; padding-bottom: 20px; margin-bottom: 32px; }
-  .app-name { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #78716c; margin-bottom: 8px; }
-  h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
-  .date { font-size: 12px; color: #a8a29e; margin-top: 6px; }
-  h2 {
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'Helvetica Neue', 'Hiragino Sans', sans-serif;
+    line-height: 1.8;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  .site-header {
+    padding: 32px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .app-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .app-icon svg { display: block; }
+  .app-meta { flex: 1; }
+  .app-name-label {
     font-size: 11px;
     font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-sub);
+    margin-bottom: 2px;
+  }
+  .page-title {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 28px;
+    margin-bottom: 12px;
+  }
+
+  .lang-block { margin-bottom: 40px; }
+
+  .lang-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 800;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #78716c;
-    margin-top: 36px;
+    color: var(--primary);
+    background: var(--accent-soft);
+    border: 1px solid #DDD0C6;
+    border-radius: 999px;
+    padding: 4px 12px;
+    margin-bottom: 16px;
+  }
+
+  .updated {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-bottom: 20px;
+  }
+
+  .intro {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+    margin-bottom: 4px;
+  }
+
+  h2 {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin: 28px 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  h2:first-of-type { margin-top: 0; }
+
+  p {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 10px;
+    line-height: 1.8;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
     margin-bottom: 10px;
   }
-  p { font-size: 14px; margin-bottom: 12px; color: #292524; }
-  ul { padding-left: 18px; margin-bottom: 12px; }
-  li { font-size: 14px; margin-bottom: 8px; color: #292524; }
-  a { color: #1c1917; }
-  .divider { border: none; border-top: 1px solid #e7e5e4; margin: 48px 0; }
-  .lang-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #a8a29e; margin-bottom: 20px; display: block; }
+  ul li {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.8;
+    padding-left: 16px;
+    position: relative;
+    margin-bottom: 6px;
+  }
+  ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--primary);
+    opacity: 0.5;
+  }
+
+  a {
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+
+  .divider {
+    border: none;
+    border-top: 2px dashed var(--border);
+    margin: 48px 0;
+  }
+
+  .footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-sub);
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
 </style>
 </head>
 <body>
+<div class="page">
 
-<header>
-  <div class="app-name">引越し日和</div>
-  <h1>利用規約</h1>
-  <div class="date">最終更新日: 2026年4月6日</div>
-</header>
+  <header class="site-header">
+    <div class="app-icon">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <path d="M14 4L4 11v13h7v-7h6v7h7V11L14 4z" fill="white" opacity="0.9"/>
+        <path d="M9 20l3 3 7-8" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="app-meta">
+      <div class="app-name-label">引越し日和</div>
+      <div class="page-title">利用規約 / Terms of Use</div>
+    </div>
+  </header>
 
-<span class="lang-tag">日本語</span>
+  <!-- ── 日本語 ── -->
+  <div class="lang-block">
+    <div class="lang-tag">🇯🇵 日本語</div>
+    <div class="card">
+      <div class="updated">最終更新日: 2026年4月6日</div>
 
-<h2>1. 本アプリの目的</h2>
-<p>引越し日和（以下「本アプリ」）は、引越しに関連するタスクを管理するための情報整理ツールです。本アプリが提供するチェックリストは一般的な引越しの参考情報であり、法的助言や専門的なアドバイスを構成するものではありません。</p>
+      <h2>1. 本アプリの目的</h2>
+      <p>引越し日和（以下「本アプリ」）は、引越しに関連するタスクを管理するための情報整理ツールです。本アプリが提供するチェックリストは一般的な参考情報であり、法的助言や専門的なアドバイスを構成するものではありません。</p>
 
-<h2>2. 免責事項</h2>
-<ul>
-  <li>本アプリのチェックリストは一般的な参考情報です。お住まいの地域や状況により、必要な手続きが異なる場合があります。</li>
-  <li>重要な手続き（転出届、転入届、ライフライン手続きなど）については、必ず各自治体・事業者に直接ご確認ください。</li>
-  <li>本アプリの利用に起因する損害（手続きの遅延、届出の漏れ等）について、当社は一切の責任を負いません。</li>
-  <li>タスクの期限表示は引越し日からの目安です。法定期限とは異なる場合があります。</li>
-</ul>
+      <h2>2. 免責事項</h2>
+      <ul>
+        <li>チェックリストは一般的な参考情報です。お住まいの地域や状況により、必要な手続きが異なる場合があります。</li>
+        <li>重要な手続き（転出届、転入届、ライフライン手続きなど）については、必ず各自治体・事業者に直接ご確認ください。</li>
+        <li>本アプリの利用に起因する損害（手続きの遅延、届出の漏れ等）について、当社は一切の責任を負いません。</li>
+        <li>タスクの期限表示は引越し日からの目安です。法定期限とは異なる場合があります。</li>
+      </ul>
 
-<h2>3. 知的財産</h2>
-<p>本アプリのデザイン、コード、コンテンツの著作権はTAMAに帰属します。</p>
+      <h2>3. 知的財産</h2>
+      <p>本アプリのデザイン、コード、コンテンツの著作権はTAMAに帰属します。</p>
 
-<h2>4. 禁止事項</h2>
-<ul>
-  <li>本アプリのリバースエンジニアリング、逆コンパイル</li>
-  <li>本アプリのコンテンツの無断複製・再配布</li>
-</ul>
+      <h2>4. 禁止事項</h2>
+      <ul>
+        <li>本アプリのリバースエンジニアリング、逆コンパイル</li>
+        <li>本アプリのコンテンツの無断複製・再配布</li>
+      </ul>
 
-<h2>5. 規約の変更</h2>
-<p>本規約は予告なく変更される場合があります。継続利用をもって変更後の規約に同意したものとみなします。</p>
+      <h2>5. 規約の変更</h2>
+      <p>本規約は予告なく変更される場合があります。継続利用をもって変更後の規約に同意したものとみなします。</p>
 
-<h2>6. 準拠法</h2>
-<p>本規約は日本法に準拠し、日本国内の裁判所を管轄裁判所とします。</p>
+      <h2>6. 準拠法</h2>
+      <p>本規約は日本法に準拠し、日本国内の裁判所を管轄裁判所とします。</p>
 
-<h2>7. お問い合わせ</h2>
-<p>メール: tama-app@example.com</p>
+      <h2>7. お問い合わせ</h2>
+      <p>メール: tama-app@example.com</p>
+    </div>
+  </div>
 
-<hr class="divider">
+  <hr class="divider">
 
-<span class="lang-tag">English</span>
+  <!-- ── English ── -->
+  <div class="lang-block">
+    <div class="lang-tag">🇺🇸 English</div>
+    <div class="card">
+      <div class="updated">Last updated: April 6, 2026</div>
 
-<h1 style="font-size:24px;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;">Terms of Use</h1>
-<div class="date" style="margin-bottom:24px;">Last updated: April 6, 2026</div>
+      <h2>1. Purpose</h2>
+      <p>引越し日和 ("the App") is an organizational tool for managing moving-related tasks. The checklists provided are general reference information and do not constitute legal or professional advice.</p>
 
-<h2>1. Purpose</h2>
-<p>引越し日和 ("the App") is an organizational tool for managing moving-related tasks. The checklists provided are general reference information and do not constitute legal or professional advice.</p>
+      <h2>2. Disclaimer</h2>
+      <ul>
+        <li>Checklists are general references. Required procedures may vary by region.</li>
+        <li>For important procedures (change of address, utility transfers, etc.), always confirm directly with the relevant authorities or service providers.</li>
+        <li>We are not liable for any damages resulting from use of the App, including missed deadlines or omitted procedures.</li>
+        <li>Task timelines are estimates based on your moving date and may differ from legal deadlines.</li>
+      </ul>
 
-<h2>2. Disclaimer</h2>
-<ul>
-  <li>Checklists are general references. Required procedures may vary by region.</li>
-  <li>For important procedures (change of address, utility transfers, etc.), always confirm directly with the relevant authorities or service providers.</li>
-  <li>We are not liable for any damages resulting from use of the App, including missed deadlines or omitted procedures.</li>
-  <li>Task timelines are estimates based on your moving date and may differ from legal deadlines.</li>
-</ul>
+      <h2>3. Intellectual Property</h2>
+      <p>All design, code, and content in the App are the property of TAMA.</p>
 
-<h2>3. Intellectual Property</h2>
-<p>All design, code, and content in the App are the property of TAMA.</p>
+      <h2>4. Prohibited Activities</h2>
+      <ul>
+        <li>Reverse engineering or decompiling the App</li>
+        <li>Unauthorized reproduction or redistribution of content</li>
+      </ul>
 
-<h2>4. Prohibited Activities</h2>
-<ul>
-  <li>Reverse engineering or decompiling the App</li>
-  <li>Unauthorized reproduction or redistribution of content</li>
-</ul>
+      <h2>5. Changes</h2>
+      <p>These terms may be updated without notice. Continued use constitutes acceptance of the updated terms.</p>
 
-<h2>5. Changes</h2>
-<p>These terms may be updated without notice. Continued use constitutes acceptance of the updated terms.</p>
+      <h2>6. Governing Law</h2>
+      <p>These terms are governed by the laws of Japan.</p>
 
-<h2>6. Governing Law</h2>
-<p>These terms are governed by the laws of Japan.</p>
+      <h2>7. Contact</h2>
+      <p>Email: tama-app@example.com</p>
+    </div>
+  </div>
 
-<h2>7. Contact</h2>
-<p>Email: tama-app@example.com</p>
+  <footer class="footer">
+    © 2026 TAMA · 引越し日和
+  </footer>
 
+</div>
 </body>
 </html>

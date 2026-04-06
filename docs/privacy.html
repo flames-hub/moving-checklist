@@ -5,115 +5,271 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>プライバシーポリシー — 引越し日和</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-    line-height: 1.75;
-    color: #1c1917;
-    background: #fafaf9;
-    padding: 40px 24px 80px;
-    max-width: 640px;
-    margin: 0 auto;
+  :root {
+    --bg: #F5F0EA;
+    --surface: #FDFAF6;
+    --primary: #B8522E;
+    --text: #1C1410;
+    --text-sub: #6B5E56;
+    --border: #DDD5CC;
+    --accent-soft: #F2EBE2;
   }
-  header { border-bottom: 2px solid #1c1917; padding-bottom: 20px; margin-bottom: 32px; }
-  .app-name { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #78716c; margin-bottom: 8px; }
-  h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
-  .date { font-size: 12px; color: #a8a29e; margin-top: 6px; }
-  h2 {
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'Helvetica Neue', 'Hiragino Sans', sans-serif;
+    line-height: 1.8;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    padding: 32px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .app-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .app-icon svg { display: block; }
+  .app-meta { flex: 1; }
+  .app-name-label {
     font-size: 11px;
     font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-sub);
+    margin-bottom: 2px;
+  }
+  .page-title {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  /* ── Section card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 28px;
+    margin-bottom: 12px;
+  }
+
+  .lang-block { margin-bottom: 40px; }
+
+  .lang-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 800;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #78716c;
-    margin-top: 36px;
+    color: var(--primary);
+    background: var(--accent-soft);
+    border: 1px solid #DDD0C6;
+    border-radius: 999px;
+    padding: 4px 12px;
+    margin-bottom: 16px;
+  }
+
+  .updated {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-bottom: 20px;
+  }
+
+  .intro {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+    margin-bottom: 4px;
+  }
+
+  h2 {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin: 28px 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  h2:first-of-type { margin-top: 0; }
+
+  p {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 10px;
+    line-height: 1.8;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
     margin-bottom: 10px;
   }
-  p { font-size: 14px; margin-bottom: 12px; color: #292524; }
-  ul { padding-left: 18px; margin-bottom: 12px; }
-  li { font-size: 14px; margin-bottom: 8px; color: #292524; }
-  a { color: #1c1917; }
-  .divider { border: none; border-top: 1px solid #e7e5e4; margin: 48px 0; }
-  .lang-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #a8a29e; margin-bottom: 20px; display: block; }
+  ul li {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.8;
+    padding-left: 16px;
+    position: relative;
+    margin-bottom: 6px;
+  }
+  ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--primary);
+    opacity: 0.5;
+  }
+
+  a {
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+
+  .divider {
+    border: none;
+    border-top: 2px dashed var(--border);
+    margin: 48px 0;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-sub);
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
 </style>
 </head>
 <body>
+<div class="page">
 
-<header>
-  <div class="app-name">引越し日和</div>
-  <h1>プライバシーポリシー</h1>
-  <div class="date">最終更新日: 2026年4月6日</div>
-</header>
+  <header class="site-header">
+    <div class="app-icon">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <path d="M14 4L4 11v13h7v-7h6v7h7V11L14 4z" fill="white" opacity="0.9"/>
+        <path d="M9 20l3 3 7-8" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="app-meta">
+      <div class="app-name-label">引越し日和</div>
+      <div class="page-title">プライバシーポリシー / Privacy Policy</div>
+    </div>
+  </header>
 
-<span class="lang-tag">日本語</span>
+  <!-- ── 日本語 ── -->
+  <div class="lang-block">
+    <div class="lang-tag">🇯🇵 日本語</div>
+    <div class="card">
+      <div class="updated">最終更新日: 2026年4月6日</div>
+      <p class="intro">引越し日和（以下「本アプリ」）は、TAMA が提供するiOS/Androidアプリケーションです。本ポリシーでは、本アプリにおける情報の取り扱いについて説明します。</p>
 
-<p>引越し日和（以下「本アプリ」）は、TAMA（以下「当社」）が提供するiOS/Androidアプリケーションです。本ポリシーでは、本アプリにおける情報の取り扱いについて説明します。</p>
+      <h2>1. 収集する情報</h2>
+      <p>本アプリは以下の情報をお客様の端末にローカル保存します。サーバーへの送信は行いません。</p>
+      <ul>
+        <li>引越し日（ユーザーが設定した日付）</li>
+        <li>タスクの完了状態・メモ・写真</li>
+        <li>アプリ設定（テーマ、通知設定、言語など）</li>
+      </ul>
 
-<h2>1. 収集する情報</h2>
-<p>本アプリは以下の情報をお客様の端末にローカル保存します。サーバーへの送信は行いません。</p>
-<ul>
-  <li>引越し日（ユーザーが設定した日付）</li>
-  <li>タスクの完了状態・メモ・写真</li>
-  <li>アプリ設定（テーマ、通知設定、言語など）</li>
-</ul>
+      <h2>2. 個人情報の送信</h2>
+      <p>本アプリは、ユーザーの個人情報を外部サーバーに送信しません。すべてのデータは端末内のローカルストレージに保存されます。</p>
 
-<h2>2. 個人情報の送信</h2>
-<p>本アプリは、ユーザーの個人情報を外部サーバーに送信しません。すべてのデータは端末内のローカルストレージに保存されます。</p>
+      <h2>3. 第三者サービス</h2>
+      <ul>
+        <li><strong>Expo</strong> — アプリの配信・更新に使用します。<a href="https://expo.dev/privacy">Expoのプライバシーポリシー</a></li>
+      </ul>
 
-<h2>3. 第三者サービス</h2>
-<p>本アプリは以下の第三者サービスを利用する場合があります。</p>
-<ul>
-  <li><strong>Expo</strong> — アプリの配信・更新に使用します。<a href="https://expo.dev/privacy">Expoのプライバシーポリシー</a></li>
-</ul>
+      <h2>4. 通知</h2>
+      <p>タスクのリマインダー通知を設定した場合、通知はすべて端末のローカルスケジューラーで処理されます。外部サーバーは使用しません。通知はアプリ設定からいつでもオフにできます。</p>
 
-<h2>4. 通知</h2>
-<p>タスクのリマインダー通知を設定した場合、通知はすべて端末のローカルスケジューラーで処理されます。外部サーバーは使用しません。通知はアプリ設定からいつでもオフにできます。</p>
+      <h2>5. お子様のプライバシー</h2>
+      <p>本アプリは13歳未満のお子様を対象としていません。13歳未満のお子様から意図的に個人情報を収集することはありません。</p>
 
-<h2>5. お子様のプライバシー</h2>
-<p>本アプリは13歳未満のお子様を対象としていません。13歳未満のお子様から意図的に個人情報を収集することはありません。</p>
+      <h2>6. ポリシーの変更</h2>
+      <p>本ポリシーは予告なく変更される場合があります。重要な変更がある場合は、本ページにて通知いたします。</p>
 
-<h2>6. ポリシーの変更</h2>
-<p>本ポリシーは予告なく変更される場合があります。重要な変更がある場合は、本ページにて通知いたします。</p>
+      <h2>7. お問い合わせ</h2>
+      <p>本ポリシーに関するご質問は以下までご連絡ください。<br>
+      メール: tama-app@example.com</p>
+    </div>
+  </div>
 
-<h2>7. お問い合わせ</h2>
-<p>本ポリシーに関するご質問は以下までご連絡ください。<br>
-メール: tama-app@example.com</p>
+  <hr class="divider">
 
-<hr class="divider">
+  <!-- ── English ── -->
+  <div class="lang-block">
+    <div class="lang-tag">🇺🇸 English</div>
+    <div class="card">
+      <div class="updated">Last updated: April 6, 2026</div>
+      <p class="intro">引越し日和 ("the App") is an iOS/Android application provided by TAMA. This policy describes how we handle information in the App.</p>
 
-<span class="lang-tag">English</span>
+      <h2>1. Information We Collect</h2>
+      <p>The App stores the following information locally on your device. No data is sent to our servers.</p>
+      <ul>
+        <li>Moving date (set by the user)</li>
+        <li>Task completion status, notes, and photos</li>
+        <li>App settings (theme, notification preferences, language)</li>
+      </ul>
 
-<h1 style="font-size:24px;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;">Privacy Policy</h1>
-<div class="date" style="margin-bottom:24px;">Last updated: April 6, 2026</div>
+      <h2>2. Data Transmission</h2>
+      <p>The App does not transmit any personal information to external servers. All data is stored in the device's local storage.</p>
 
-<p>引越し日和 ("the App") is an iOS/Android application provided by TAMA ("we", "us"). This policy describes how we handle information in the App.</p>
+      <h2>3. Third-Party Services</h2>
+      <ul>
+        <li><strong>Expo</strong> — Used for app distribution and updates. <a href="https://expo.dev/privacy">Expo's Privacy Policy</a></li>
+      </ul>
 
-<h2>1. Information We Collect</h2>
-<p>The App stores the following information locally on your device. No data is sent to our servers.</p>
-<ul>
-  <li>Moving date (set by the user)</li>
-  <li>Task completion status, notes, and photos</li>
-  <li>App settings (theme, notification preferences, language)</li>
-</ul>
+      <h2>4. Notifications</h2>
+      <p>Reminder notifications are scheduled entirely on-device. No push notification server is used. Notifications can be disabled in app settings at any time.</p>
 
-<h2>2. Data Transmission</h2>
-<p>The App does not transmit any personal information to external servers. All data is stored in the device's local storage.</p>
+      <h2>5. Children's Privacy</h2>
+      <p>The App is not intended for children under 13. We do not knowingly collect personal information from children under 13.</p>
 
-<h2>3. Third-Party Services</h2>
-<ul>
-  <li><strong>Expo</strong> — Used for app distribution and updates. <a href="https://expo.dev/privacy">Expo's Privacy Policy</a></li>
-</ul>
+      <h2>6. Changes</h2>
+      <p>This policy may be updated from time to time. Significant changes will be communicated on this page.</p>
 
-<h2>4. Notifications</h2>
-<p>Reminder notifications are scheduled entirely on-device using the local scheduler. No push notification server is used. Notifications can be disabled in app settings at any time.</p>
+      <h2>7. Contact</h2>
+      <p>For questions: tama-app@example.com</p>
+    </div>
+  </div>
 
-<h2>5. Children's Privacy</h2>
-<p>The App is not intended for children under 13. We do not knowingly collect personal information from children under 13.</p>
+  <footer class="footer">
+    © 2026 TAMA · 引越し日和
+  </footer>
 
-<h2>6. Changes</h2>
-<p>This policy may be updated from time to time. Significant changes will be communicated on this page.</p>
-
-<h2>7. Contact</h2>
-<p>For questions: tama-app@example.com</p>
-
+</div>
 </body>
 </html>
