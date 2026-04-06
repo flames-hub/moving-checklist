@@ -24,8 +24,8 @@ import { ThemeMeta, Themes, Spacing, FontSize, BorderRadius } from '../constants
 import { formatDate } from '../utils/dateCalc';
 import PaywallModal from '../components/PaywallModal';
 
-const PRIVACY_URL = 'https://tama-app.github.io/moving-checklist/privacy.html';
-const TERMS_URL = 'https://tama-app.github.io/moving-checklist/terms.html';
+const PRIVACY_URL = 'https://flames-hub.github.io/moving-checklist/privacy.html';
+const TERMS_URL = 'https://flames-hub.github.io/moving-checklist/terms.html';
 
 export default function SettingsScreen() {
   const { t, i18n } = useTranslation();
