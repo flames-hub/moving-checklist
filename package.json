@@ -40,5 +40,9 @@
     "@types/uuid": "^10.0.0",
     "typescript": "~5.9.2"
   },
-  "private": true
+  "private": true,
+  "overrides": {
+    "postcss": "^8.5.32",
+    "ws@7": "^7.5.13"
+  }
 }
